@@ -15,7 +15,7 @@ import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
 import java.io.File
 
 class GameActivity  : AppCompatActivity() {
@@ -50,7 +50,7 @@ class GameActivity  : AppCompatActivity() {
         }
 
         val imageView = findViewById<ImageView>(R.id.mainPhoto)
-        Picasso.get().load(imageLink).placeholder(R.drawable.spinner).fit().centerCrop().into(imageView)
+        Glide.with(this).load(imageLink).placeholder(R.drawable.spinner).centerCrop().into(imageView)
 
         val titleValue = findViewById<TextView>(R.id.titleValue)
         val yearValue = findViewById<TextView>(R.id.yearValue)

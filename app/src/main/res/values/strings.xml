@@ -23,4 +23,5 @@
     <string name="authorities">edu.put.fileprovider</string>
     <string name="takePhotoLabel">Zrób zdjęcie</string>
     <string name="addFromGalleryLabel">Dodaj zdjęcie z galerii</string>
+    <string name="glideInfo">Aplikacja wykorzystuje bibliotekę\n do ładowania zdjęć: Glide</string>
 </resources>

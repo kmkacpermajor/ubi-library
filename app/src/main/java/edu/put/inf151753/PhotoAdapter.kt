@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
 import java.io.File
 
 class PhotoAdapter(var activity: GameActivity, var context: Context, var photos: List<Photo>) :
@@ -14,7 +14,7 @@ class PhotoAdapter(var activity: GameActivity, var context: Context, var photos:
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        Picasso.get().load(File(photos[position].path)).placeholder(R.drawable.spinner).fit().centerCrop().into(holder.photo)
+        Glide.with(activity).load(File(photos[position].path)).placeholder(R.drawable.spinner).centerCrop().into(holder.photo)
         holder.photo.setOnClickListener{
             activity.showPhoto(photos[position])
         }

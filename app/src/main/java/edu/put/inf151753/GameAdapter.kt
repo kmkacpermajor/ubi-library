@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
 
 class GameAdapter(var activity: GameListActivity, var context: Context, var games: List<Game>) :
     RecyclerView.Adapter<GameViewHolder>() {
@@ -14,7 +14,7 @@ class GameAdapter(var activity: GameListActivity, var context: Context, var game
 
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
         holder.gameId.setText(games[position].gameId.toString())
-        Picasso.get().load(games[position].thumbnailLink).placeholder(R.drawable.spinner).fit().centerCrop().into(holder.thumbnail)
+        Glide.with(activity).load(games[position].thumbnailLink).placeholder(R.drawable.spinner).centerCrop().into(holder.thumbnail)
         holder.title.setText(games[position].title)
         holder.year.setText("(${games[position].year})")
         holder.button.setOnClickListener{ view -> activity.showGameClickedHandler(games[position].gameId, games[position].type) }
