@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">ubi-library</string>
+    <string name="userLabel">Nazwa użytkownika:</string>
+    <string name="nonePlaceholder">Brak</string>
+    <string name="boardgamesLabel">Liczba gier:</string>
+    <string name="boardgameexpansionsLabel">Liczba dodatków:</string>
+    <string name="syncLabel">Data ostatniej synchronizacji:</string>
+    <string name="title">Biblioteka gier</string>
+    <string name="boardgameListTitle">Lista gier</string>
+    <string name="boardgameexpansionListTitle">Lista dodatków</string>
+    <string name="boardgameTitle">Gra</string>
+    <string name="boardgameexpansionTitle">Dodatek</string>
+    <string name="syncButton">Synchronizuj</string>
+    <string name="clearButton">Wyczyść dane</string>
+    <string name="showGame">Pokaż więcej</string>
+    <string name="titleLabel">Tytuł gry:</string>
+    <string name="yearLabel">Rok wydania:</string>
+    <string name="rankingLabel">Pozycja w rankingu:</string>
+    <string name="confTitle">Konfiguracja</string>
+    <string name="loginButton">Zaloguj</string>
+    <string name="syncSure">Ostatnia synchronizacja miała miejsce mniej niż 24 godziny temu.\nNa pewno chcesz zsynchronizować dane?</string>
+    <string name="imagesDir">images</string>
+    <string name="authorities">edu.put.fileprovider</string>
+    <string name="takePhotoLabel">Zrób zdjęcie</string>
+    <string name="addFromGalleryLabel">Dodaj zdjęcie z galerii</string>
+</resources>

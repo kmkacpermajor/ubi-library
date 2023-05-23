@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="183dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginBottom="80dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:gravity="center"
+        android:lines="2"
+        android:singleLine="false"
+        android:text="@string/title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="200dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:id="@+id/userLabel"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:gravity="end"
+                android:text="@string/userLabel" />
+
+            <TextView
+                android:id="@+id/userValue"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingLeft="5dp"
+                android:text="@string/nonePlaceholder" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:id="@+id/gamesLabel"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:gravity="end"
+                android:text="@string/boardgamesLabel" />
+
+            <TextView
+                android:id="@+id/gamesValue"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingLeft="5dp"
+                android:text="@string/nonePlaceholder" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:id="@+id/addonLabel"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="@string/boardgameexpansionsLabel" />
+
+            <TextView
+                android:id="@+id/addonValue"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingLeft="5dp"
+                android:text="@string/nonePlaceholder" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:id="@+id/syncLabel"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="@string/syncLabel" />
+
+            <TextView
+                android:id="@+id/syncValue"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingLeft="5dp"
+                android:text="@string/nonePlaceholder" />
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/tableLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="27dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingBottom="10dp">
+
+            <Button
+                android:id="@+id/gameListButton"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:onClick="goToGamesList"
+                android:text="@string/boardgameListTitle" />
+
+            <Button
+                android:id="@+id/addonListButton"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:onClick="goToAddonsList"
+                android:text="@string/boardgameexpansionListTitle" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingBottom="10dp">
+
+            <Button
+                android:id="@+id/syncButton"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:onClick="goToSync"
+                android:text="@string/syncButton" />
+
+            <Button
+                android:id="@+id/clearButton"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:onClick="clearDB"
+                android:text="@string/clearButton" />
+        </TableRow>
+
+    </TableLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="59dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="99dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:onClick="goToPhotos"
+        android:padding="0dp"
+        android:paddingLeft="0dp"
+        android:paddingTop="0dp"
+        android:paddingRight="0dp"
+        android:text="+"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/photoRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#6750A2"
+        android:elevation="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="59dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:onClick="goBack"
+            android:padding="0dp"
+            android:paddingLeft="0dp"
+            android:paddingTop="0dp"
+            android:paddingRight="0dp"
+            android:text="↩"
+            android:textSize="34sp" />
+
+        <TextView
+            android:id="@+id/gameTitle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="sans-serif-smallcaps"
+            android:gravity="center"
+            android:shadowColor="#000000"
+            android:shadowDx="2"
+            android:shadowDy="5"
+            android:shadowRadius="1"
+            android:text="@string/nonePlaceholder"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/mainPhoto"
+        android:layout_width="185dp"
+        android:layout_height="175dp"
+        android:layout_marginStart="113dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="113dp"
+        android:background="#FFFFFF"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="411dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainPhoto">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:id="@+id/titleLabel"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="end"
+                android:text="@string/titleLabel" />
+
+            <TextView
+                android:id="@+id/titleValue"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:lines="3"
+                android:maxWidth="80dp"
+                android:paddingLeft="5dp"
+                android:text="@string/nonePlaceholder" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:id="@+id/yearLabel"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="end"
+                android:text="@string/yearLabel" />
+
+            <TextView
+                android:id="@+id/yearValue"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingLeft="5dp"
+                android:text="@string/nonePlaceholder" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:id="@+id/rankingLabel"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="end"
+                android:text="@string/rankingLabel" />
+
+            <TextView
+                android:id="@+id/rankingValue"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingLeft="5dp"
+                android:text="@string/nonePlaceholder" />
+        </TableRow>
+
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="172dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="173dp"
+        android:text="Zdjęcia"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/photoRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
