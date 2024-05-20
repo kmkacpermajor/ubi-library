@@ -27,7 +27,7 @@ class PhotoActivity : AppCompatActivity() {
                 result ->
             if (result != null){
                 val path = saveCapturedImage(tempImageUri)
-                val dbHandler = DatabaseConnector(this, null, null, 1)
+                val dbHandler = MySQLDatabaseConnector(this)
                 dbHandler.insertPhoto(gameId, path)
                 this.finish()
             }
@@ -40,7 +40,7 @@ class PhotoActivity : AppCompatActivity() {
 
         val resultLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()){
             val path = saveCapturedImage(tempImageUri)
-            val dbHandler = DatabaseConnector(this, null, null, 1)
+            val dbHandler = MySQLDatabaseConnector(this)
             dbHandler.insertPhoto(gameId, path)
             this.finish()
         }

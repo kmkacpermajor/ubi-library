@@ -2,51 +2,66 @@ package edu.put.inf151753
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class GameListActivity  : AppCompatActivity() {
     lateinit var games: MutableList<Game>
     lateinit var adapter: GameAdapter
+    lateinit var dbHandler: MySQLDatabaseConnector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_list)
 
-        val type = intent.getStringExtra("type") ?: "boardgame"
+        val type = "boardgame"
 
         val listTitleView: TextView = findViewById(R.id.listTitle)
-        if (type == "boardgame")
-            listTitleView.setText(R.string.boardgameListTitle)
-        else
-            listTitleView.setText(R.string.boardgameexpansionListTitle)
+        listTitleView.setText(R.string.boardgameListTitle)
 
-        val dbHandler = DatabaseConnector(this, null, null, 1)
-        val recyclerView: RecyclerView = findViewById(R.id.gamesListView)
-
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                dbHandler = MySQLDatabaseConnector(this@GameListActivity)
+                val recyclerView: RecyclerView = findViewById(R.id.gamesListView)
 
 
-        games = dbHandler.getGames(type)
-        games.sortWith(Comparator { lhs, rhs ->
-            // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-            if (lhs.title > rhs.title) 1 else if (lhs.title < rhs.title) -1 else 0
-        })
 
-        adapter = GameAdapter(this, applicationContext, games)
+                games = dbHandler.getGames()
+                games.sortWith(Comparator { lhs, rhs ->
+                    // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                    if (lhs.title > rhs.title) 1 else if (lhs.title < rhs.title) -1 else 0
+                })
+                withContext(Dispatchers.Main) {
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+                    adapter = GameAdapter(this@GameListActivity, applicationContext, games)
+
+                    recyclerView.layoutManager = LinearLayoutManager(this@GameListActivity)
+                    recyclerView.adapter = adapter
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@GameListActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
+                    this@GameListActivity.finish()
+                }
+            }
+        }
+
     }
 
-    fun showGameClickedHandler(gameId: Int, type: String){
+    fun showGameClickedHandler(gameId: Int){
         var intent = Intent(this, GameActivity::class.java)
         intent.putExtra("id", gameId)
-        intent.putExtra("type", type)
         startActivity(intent)
 
     }

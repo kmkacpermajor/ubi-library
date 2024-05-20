@@ -24,7 +24,7 @@ class PhotoViewerActivity : AppCompatActivity() {
     }
 
     fun deletePhoto(view: View){
-        val dbHandler = DatabaseConnector(this, null, null, 1)
+        val dbHandler = MySQLDatabaseConnector(this)
         dbHandler.deletePhoto(path)
         this.finish()
     }

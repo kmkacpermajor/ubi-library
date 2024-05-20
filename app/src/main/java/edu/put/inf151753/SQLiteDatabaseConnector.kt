@@ -24,14 +24,8 @@ import java.nio.charset.StandardCharsets
 import javax.xml.parsers.DocumentBuilderFactory
 
 
-class TryAgainException : Exception {
-    constructor() : super()
-    constructor(message: String) : super(message)
-    constructor(message: String, cause: Throwable) : super(message, cause)
-    constructor(cause: Throwable) : super(cause)
-}
 
-class DatabaseConnector (context: Context, name: String?, factory: SQLiteDatabase.CursorFactory?, version: Int) : SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION){
+class SQLiteDatabaseConnector (context: Context, name: String?, factory: SQLiteDatabase.CursorFactory?, version: Int) : SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION){
     companion object{
         private val DATABASE_VERSION = 1
         private val DATABASE_NAME = "library.db"
@@ -47,12 +41,10 @@ class DatabaseConnector (context: Context, name: String?, factory: SQLiteDatabas
         val COLUMN_IMAGELINK = "imagelink"
         val COLUMN_YEAR = "year"
         val COLUMN_RANKING = "ranking"
-        val COLUMN_TYPE = "type"
 
         val COLUMN_USERNAME = "username"
         val COLUMN_LAST = "last"
         val COLUMN_COUNT = "count"
-        val COLUMN_COUNT_EXP = "count_exp"
 
         val COLUMN_PATH = "path"
     }
@@ -82,7 +74,7 @@ class DatabaseConnector (context: Context, name: String?, factory: SQLiteDatabas
             throw TryAgainException()
         }
 
-        val INSERT_GAME = "INSERT INTO $TABLE_GAMES VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);"
+        val INSERT_GAME = "INSERT INTO $TABLE_GAMES VALUES (NULL, ?, ?, ?, ?, ?, ?);"
 
         val insert = db.compileStatement(INSERT_GAME)
 
@@ -98,7 +90,6 @@ class DatabaseConnector (context: Context, name: String?, factory: SQLiteDatabas
                 val thumbnaillink = elem.getElementsByTagName("thumbnail").item(0)?.textContent ?: "BRAK"
                 val imagelink = elem.getElementsByTagName("image").item(0)?.textContent ?: "BRAK"
                 val ranking = (elem.getElementsByTagName("rank").item(0) as Element).getAttribute("value") ?: "BRAK"
-                val type = elem.getAttribute("subtype") ?: "boardgame"
 
                 insert.clearBindings()
                 insert.bindString(1, gameid)
@@ -107,17 +98,15 @@ class DatabaseConnector (context: Context, name: String?, factory: SQLiteDatabas
                 insert.bindString(4, imagelink)
                 insert.bindString(5, year)
                 insert.bindString(6, ranking)
-                insert.bindString(7, type)
-
 
                 insert.executeInsert()
             }
         }
     }
 
-    fun getCount(type: String): Int {
+    fun getCount(): Int {
         val db = this.writableDatabase
-        val SELECT_COUNT = "SELECT COUNT(*) FROM $TABLE_GAMES WHERE $COLUMN_TYPE = '$type'"
+        val SELECT_COUNT = "SELECT COUNT(*) FROM $TABLE_GAMES"
         var cursor = db.rawQuery(SELECT_COUNT, null)
         if (cursor.moveToFirst()) {
             return cursor.getInt(0)
@@ -126,10 +115,10 @@ class DatabaseConnector (context: Context, name: String?, factory: SQLiteDatabas
     }
 
     @SuppressLint("Range")
-    fun getGames(type: String): MutableList<Game> {
+    fun getGames(): MutableList<Game> {
         var list: MutableList<Game> = ArrayList()
         val db = this.writableDatabase
-        val SELECT_COUNT = "SELECT * FROM $TABLE_GAMES WHERE $COLUMN_TYPE = '$type'"
+        val SELECT_COUNT = "SELECT * FROM $TABLE_GAMES"
         var cursor = db.rawQuery(SELECT_COUNT, null)
         if (cursor.moveToFirst()) {
             do{
@@ -138,8 +127,7 @@ class DatabaseConnector (context: Context, name: String?, factory: SQLiteDatabas
                                 cursor.getString(cursor.getColumnIndex(COLUMN_YEAR)),
                                 cursor.getString(cursor.getColumnIndex(COLUMN_THUMBNAILLINK)),
                                 cursor.getString(cursor.getColumnIndex(COLUMN_IMAGELINK)),
-                                cursor.getInt(cursor.getColumnIndex(COLUMN_RANKING)),
-                                cursor.getString(cursor.getColumnIndex(COLUMN_TYPE))
+                                cursor.getInt(cursor.getColumnIndex(COLUMN_RANKING))
                 ))
             }while(cursor.moveToNext())
         }
@@ -157,8 +145,7 @@ class DatabaseConnector (context: Context, name: String?, factory: SQLiteDatabas
                 cursor.getString(cursor.getColumnIndex(COLUMN_YEAR)),
                 cursor.getString(cursor.getColumnIndex(COLUMN_THUMBNAILLINK)),
                 cursor.getString(cursor.getColumnIndex(COLUMN_IMAGELINK)),
-                cursor.getInt(cursor.getColumnIndex(COLUMN_RANKING)),
-                cursor.getString(cursor.getColumnIndex(COLUMN_TYPE)))
+                cursor.getInt(cursor.getColumnIndex(COLUMN_RANKING)))
         }
         throw NoSuchFieldError(gameId.toString())
     }
@@ -169,7 +156,7 @@ class DatabaseConnector (context: Context, name: String?, factory: SQLiteDatabas
         val drop = db.compileStatement(DROP_IF_EXISTS)
         drop.execute()
 
-        val CREATE_IF_NOT_EXISTS = "CREATE TABLE $TABLE_GAMES ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_GAMEID INTEGER, $COLUMN_NAME TEXT, $COLUMN_THUMBNAILLINK TEXT, $COLUMN_IMAGELINK TEXT, $COLUMN_YEAR TEXT, $COLUMN_RANKING INTEGER, $COLUMN_TYPE TEXT)"
+        val CREATE_IF_NOT_EXISTS = "CREATE TABLE $TABLE_GAMES ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_GAMEID INTEGER, $COLUMN_NAME TEXT, $COLUMN_THUMBNAILLINK TEXT, $COLUMN_IMAGELINK TEXT, $COLUMN_YEAR TEXT, $COLUMN_RANKING INTEGER)"
         val create = db.compileStatement(CREATE_IF_NOT_EXISTS)
         create.execute()
     }
@@ -210,7 +197,7 @@ class DatabaseConnector (context: Context, name: String?, factory: SQLiteDatabas
         val drop = db.compileStatement(DROP_IF_EXISTS)
         drop.execute()
 
-        val CREATE_IF_NOT_EXISTS = "CREATE TABLE $TABLE_TECH ($COLUMN_USERNAME TEXT, $COLUMN_LAST LONG, $COLUMN_COUNT INT, $COLUMN_COUNT_EXP INT)"
+        val CREATE_IF_NOT_EXISTS = "CREATE TABLE $TABLE_TECH ($COLUMN_USERNAME TEXT, $COLUMN_LAST LONG, $COLUMN_COUNT INT)"
         val create = db.compileStatement(CREATE_IF_NOT_EXISTS)
         create.execute()
     }
@@ -265,11 +252,10 @@ class DatabaseConnector (context: Context, name: String?, factory: SQLiteDatabas
                     Toast.makeText(context, "Załadowano dane", Toast.LENGTH_SHORT).show()
 
                     val current_timestamp = System.currentTimeMillis() / 1000
-                    val count = getCount("boardgame")
-                    val count_exp = getCount("boardgameexpansion")
+                    val count = getCount()
 
                     val UPDATE_STATS =
-                        "UPDATE $TABLE_TECH SET $COLUMN_LAST = $current_timestamp, $COLUMN_COUNT = $count, $COLUMN_COUNT_EXP = $count_exp;"
+                        "UPDATE $TABLE_TECH SET $COLUMN_LAST = $current_timestamp, $COLUMN_COUNT = $count;"
                     db.execSQL(UPDATE_STATS)
 
                     (context as SyncActivity).updateDate()

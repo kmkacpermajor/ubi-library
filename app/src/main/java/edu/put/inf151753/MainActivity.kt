@@ -7,34 +7,54 @@ import android.provider.ContactsContract.Data
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
+    lateinit var dbHandler: MySQLDatabaseConnector
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        updateInfo(true)
-
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                dbHandler = MySQLDatabaseConnector(this@MainActivity)
+                updateInfo(true)
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
+                    this@MainActivity.finish()
+                }
+            }
+        }
     }
 
     override fun onResume(){
         super.onResume()
 
-        updateInfo(false)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                dbHandler = MySQLDatabaseConnector(this@MainActivity)
+                updateInfo(false)
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
+                    this@MainActivity.finish()
+                }
+            }
+        }
     }
 
     fun updateInfo(goToConf: Boolean){
-        val dbHandler = DatabaseConnector(this, null, null, 1)
         if (!dbHandler.firstTime()){
-            var count = dbHandler.getCount("boardgame").toString()
+            var count = dbHandler.getCount().toString()
             if (count == "0") count = "BRAK"
-
-            var count_exp = dbHandler.getCount("boardgameexpansion").toString()
-            if (count_exp == "0") count_exp = "BRAK"
 
             findViewById<TextView>(R.id.userValue).setText(dbHandler.getUser())
             findViewById<TextView>(R.id.gamesValue).setText(count)
-            findViewById<TextView>(R.id.addonValue).setText(count_exp)
             findViewById<TextView>(R.id.syncValue).setText(toDate(dbHandler.getTimestamp()))
         }else{
             if (goToConf)
@@ -45,12 +65,6 @@ class MainActivity : AppCompatActivity() {
     fun goToGamesList(view: View){
         val intent = Intent(this, GameListActivity::class.java)
         intent.putExtra("type", "boardgame")
-        startActivity(intent)
-    }
-
-    fun goToAddonsList(view: View){
-        val intent = Intent(this, GameListActivity::class.java)
-        intent.putExtra("type", "boardgameexpansion")
         startActivity(intent)
     }
 
@@ -65,12 +79,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun clearDB(view: View){
-        val dbHandler = DatabaseConnector(this, null, null, 1)
-        dbHandler.clearGames()
-        dbHandler.clearTech()
-        dbHandler.clearPhotos()
+        CoroutineScope(Dispatchers.IO).launch {
+            dbHandler.clearGames()
+            dbHandler.clearTech()
+            dbHandler.clearPhotos()
 
-        this.finish()
+            this@MainActivity.finish()
+        }
     }
 
     fun goBack(view: View){

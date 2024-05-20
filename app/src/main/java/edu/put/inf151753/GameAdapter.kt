@@ -17,7 +17,7 @@ class GameAdapter(var activity: GameListActivity, var context: Context, var game
         Glide.with(activity).load(games[position].thumbnailLink).placeholder(R.drawable.spinner).centerCrop().into(holder.thumbnail)
         holder.title.setText(games[position].title)
         holder.year.setText("(${games[position].year})")
-        holder.button.setOnClickListener{ view -> activity.showGameClickedHandler(games[position].gameId, games[position].type) }
+        holder.button.setOnClickListener{ view -> activity.showGameClickedHandler(games[position].gameId) }
     }
 
     override fun getItemCount(): Int {

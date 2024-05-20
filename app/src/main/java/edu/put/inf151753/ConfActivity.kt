@@ -6,23 +6,49 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ConfActivity : AppCompatActivity() {
+    lateinit var dbHandler: MySQLDatabaseConnector
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conf)
+
+        CoroutineScope(Dispatchers.IO).launch {
+//            try {
+            dbHandler = MySQLDatabaseConnector(this@ConfActivity)
+//            } catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                    Toast.makeText(this@MainActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
+//                    this@MainActivity.finish()
+//                }
+//            }
+        }
     }
 
     fun createAccount(view: View){
-        val dbHandler = DatabaseConnector(this, null, null, 1)
-
         val username = findViewById<EditText>(R.id.usernameValue).text.toString()
 
-        dbHandler.insertUser(username)
-        Toast.makeText(this, "Zalogowano", Toast.LENGTH_SHORT).show()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                dbHandler.insertUser(username)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@ConfActivity, "Zalogowano", Toast.LENGTH_SHORT).show()
 
-        this.finish()
-        goToSync()
+                    this@ConfActivity.finish()
+                    goToSync()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@ConfActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
+                    this@ConfActivity.finish()
+                }
+            }
+        }
+
     }
 
     fun goToSync(){
