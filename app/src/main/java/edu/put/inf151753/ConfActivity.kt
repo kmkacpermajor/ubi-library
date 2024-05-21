@@ -18,14 +18,14 @@ class ConfActivity : AppCompatActivity() {
         setContentView(R.layout.activity_conf)
 
         CoroutineScope(Dispatchers.IO).launch {
-//            try {
+            try {
             dbHandler = MySQLDatabaseConnector(this@ConfActivity)
-//            } catch (e: Exception) {
-//                withContext(Dispatchers.Main) {
-//                    Toast.makeText(this@MainActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
-//                    this@MainActivity.finish()
-//                }
-//            }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@ConfActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
+                    this@ConfActivity.finish()
+                }
+            }
         }
     }
 

@@ -20,15 +20,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         CoroutineScope(Dispatchers.IO).launch {
-            try {
+//            try {
                 dbHandler = MySQLDatabaseConnector(this@MainActivity)
-                updateInfo(true)
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
-                    this@MainActivity.finish()
-                }
-            }
+                updateInfo()
+//            } catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                    Toast.makeText(this@MainActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
+//                    this@MainActivity.finish()
+//                }
+//            }
         }
     }
 
@@ -36,29 +36,37 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         CoroutineScope(Dispatchers.IO).launch {
-            try {
+//            try {
                 dbHandler = MySQLDatabaseConnector(this@MainActivity)
-                updateInfo(false)
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
-                    this@MainActivity.finish()
-                }
-            }
+                updateInfo()
+//            } catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                    Toast.makeText(this@MainActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
+//                    this@MainActivity.finish()
+//                }
+//            }
         }
     }
 
-    fun updateInfo(goToConf: Boolean){
-        if (!dbHandler.firstTime()){
-            var count = dbHandler.getCount().toString()
-            if (count == "0") count = "BRAK"
+    fun updateInfo(){
+        CoroutineScope(Dispatchers.IO).launch {
 
-            findViewById<TextView>(R.id.userValue).setText(dbHandler.getUser())
-            findViewById<TextView>(R.id.gamesValue).setText(count)
-            findViewById<TextView>(R.id.syncValue).setText(toDate(dbHandler.getTimestamp()))
-        }else{
-            if (goToConf)
-                goToConf()
+            if (!dbHandler.firstTime()) {
+                var count = dbHandler.getCount().toString()
+                var user = dbHandler.getUser()
+                var timestamp = dbHandler.getTimestamp()
+                if (count == "0") count = "BRAK"
+
+                withContext(Dispatchers.Main) {
+                    findViewById<TextView>(R.id.userValue).setText(user)
+                    findViewById<TextView>(R.id.gamesValue).setText(count)
+                    findViewById<TextView>(R.id.syncValue).setText(toDate(timestamp))
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    goToConf()
+                }
+            }
         }
     }
 
@@ -82,7 +90,6 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             dbHandler.clearGames()
             dbHandler.clearTech()
-            dbHandler.clearPhotos()
 
             this@MainActivity.finish()
         }

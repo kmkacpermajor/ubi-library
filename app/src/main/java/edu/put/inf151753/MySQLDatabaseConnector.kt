@@ -41,7 +41,6 @@ class MySQLDatabaseConnector (context: Context){
 
         val TABLE_GAMES = "games"
         val TABLE_TECH = "tech"
-        val TABLE_PHOTOS = "photos"
 
         val COLUMN_ID = "_id"
         val COLUMN_GAMEID = "gameid"
@@ -54,8 +53,6 @@ class MySQLDatabaseConnector (context: Context){
         val COLUMN_USERNAME = "username"
         val COLUMN_LAST = "last"
         val COLUMN_COUNT = "count"
-
-        val COLUMN_PATH = "path"
     }
 
     val context = context
@@ -305,67 +302,5 @@ class MySQLDatabaseConnector (context: Context){
             return true
         }
         return false
-    }
-
-    fun clearPhotos(givendb: Connection?=null) {
-        val db = givendb ?: this.connection
-
-        if(tableExists(TABLE_PHOTOS, db)){
-            val list = getPhotos(givendb = db)
-            list.forEach { el -> File(el.path).delete() }
-        }
-
-        val DROP_IF_EXISTS = "DROP TABLE IF EXISTS $TABLE_PHOTOS;"
-        val drop = db.prepareStatement(DROP_IF_EXISTS)
-        drop.execute()
-
-        val CREATE_IF_NOT_EXISTS = "CREATE TABLE $TABLE_PHOTOS ($COLUMN_ID int AUTO_INCREMENT, $COLUMN_GAMEID int, $COLUMN_PATH varchar(255), PRIMARY KEY ($COLUMN_ID))"
-        val create = db.prepareStatement(CREATE_IF_NOT_EXISTS)
-        create.execute()
-    }
-
-    @SuppressLint("Range")
-    fun getPhotos(gameId: Int?=null, givendb: Connection?=null): MutableList<Photo>{
-        val db = givendb ?: this.connection
-
-        var list: MutableList<Photo> = ArrayList()
-        var query: String
-
-        if (gameId == null){
-            query =
-                "SELECT * FROM $TABLE_PHOTOS"
-        }else{
-            query =
-                "SELECT * FROM $TABLE_PHOTOS WHERE $COLUMN_GAMEID = $gameId"
-        }
-
-        val statement = db.prepareStatement(query)
-        val rs = statement.executeQuery()
-        while (rs.next()) {
-            list.add(Photo(rs.getString((COLUMN_PATH))))
-        }
-        return list
-    }
-
-    fun insertPhoto(gameId: Int, path: String) {
-        val db = this.connection
-        val INSERT_GAME = "INSERT INTO $TABLE_PHOTOS VALUES (NULL, $gameId, ?);"
-
-        val insert = db.prepareStatement(INSERT_GAME)
-        insert.setString(1, path)
-
-        insert.execute()
-    }
-
-    fun deletePhoto(path: String){
-        val db = this.connection
-        val DELETE_PHOTO = "DELETE FROM $TABLE_PHOTOS WHERE $COLUMN_PATH = ?"
-
-        val delete = db.prepareStatement(DELETE_PHOTO)
-        delete.setString(1, path)
-
-        delete.execute()
-
-        File(path).delete()
     }
 }

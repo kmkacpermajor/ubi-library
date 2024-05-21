@@ -25,8 +25,6 @@ import java.io.File
 
 class GameActivity  : AppCompatActivity() {
 
-    lateinit var adapter: PhotoAdapter
-    lateinit var photos: MutableList<Photo>
     var gameId: Int = 0
     var tempImageUri: String = ""
     lateinit var dbHandler: MySQLDatabaseConnector
@@ -45,7 +43,6 @@ class GameActivity  : AppCompatActivity() {
             try {
                 dbHandler = MySQLDatabaseConnector(this@GameActivity)
                 val game = dbHandler.getGame(gameId)
-                photos = dbHandler.getPhotos(gameId)
 
 
                 withContext(Dispatchers.Main) {
@@ -66,13 +63,6 @@ class GameActivity  : AppCompatActivity() {
                     titleValue.setText(game.title)
                     yearValue.setText(game.year)
                     rankingValue.setText(if (game.ranking == 0) "BRAK" else game.ranking.toString())
-
-                    val recyclerView: RecyclerView = findViewById(R.id.photoRecyclerView)
-
-                    adapter = PhotoAdapter(this@GameActivity, applicationContext, photos)
-
-                    recyclerView.layoutManager = GridLayoutManager(this@GameActivity, 2)
-                    recyclerView.adapter = adapter
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -82,24 +72,6 @@ class GameActivity  : AppCompatActivity() {
             }
         }
 
-    }
-
-    fun showPhoto(photo: Photo){
-        var intent = Intent(this, PhotoViewerActivity::class.java)
-        intent.putExtra("path", photo.path)
-        startActivity(intent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        if(::adapter.isInitialized) adapter.updatePhotos(dbHandler.getPhotos(gameId))
-    }
-
-    fun goToPhotos(view: View){
-        var intent = Intent(this, PhotoActivity::class.java)
-        intent.putExtra("id", gameId)
-        startActivity(intent)
     }
 
     fun goBack(view: View){

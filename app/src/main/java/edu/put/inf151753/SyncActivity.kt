@@ -39,25 +39,7 @@ class SyncActivity  : AppCompatActivity() {
     fun sychronize(view: View){
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val current_timestamp = System.currentTimeMillis() / 1000
-                val timestamp = dbHandler.getTimestamp()
-
-                if (current_timestamp - timestamp < 86400){
-                    val builder = AlertDialog.Builder(this@SyncActivity)
-                    builder.setMessage(R.string.syncSure)
-                        .setCancelable(false)
-                        .setPositiveButton("Tak") { dialog, id ->
-                            dbHandler.synchronize()
-                        }
-                        .setNegativeButton("Nie") { dialog, id ->
-                            dialog.dismiss()
-                        }
-
-                    val alert = builder.create()
-                    alert.show()
-                }else{
-                    dbHandler.synchronize()
-                }
+                dbHandler.synchronize()
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@SyncActivity, "Baza danych jest niedostępna", Toast.LENGTH_SHORT).show()
